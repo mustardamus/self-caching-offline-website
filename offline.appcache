@@ -1,0 +1,16 @@
+CACHE MANIFEST
+
+CACHE:
+index.html
+offline.html
+js/jquery.js
+js/scow.js
+
+FALLBACK:
+/ offline.html
+
+NETWORK:
+*
+
+# LAST UPDATE
+# 01/17/12

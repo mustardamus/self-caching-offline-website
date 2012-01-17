@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html manifest="offline.appcache">
+  <head>
+    <title>Self caching offline website - Additional CSS Example</title>
+    
+    <link href='css/bootstrap.min.css' rel='stylesheet' type='text/css' />
+    <link href='css/demo.css' rel='stylesheet' type='text/css' />
+    
+    <script src='js/jquery.js'></script>
+    <script src='js/scow.js'></script>
+  </head>
+  <body>
+    <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <ul class="nav">
+            <li class="active"><a href="index.html">Home</a></li>
+            <li><a href="style.html">Additional CSS Example</a></li>
+            <li><a href="javascript.html">Additional JS Example</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container">
+      <div class="content">
+        <div class="page-header">
+          <h1>
+            Self caching offline website
+            <small>Home</small>
+          </h1>
+        </div>
+        <div class="row">
+          <div class="span10">
+            <div class="alert-message info">
+              This is the demo for the tutorial
+              <a href="http://usejquery.com/posts/create-a-self-caching-website-ready-for-offline-usage-with-html5-and-jquery">
+                Create a self caching website ready for offline usage with HTML5 and jQuery
+              </a>.
+            </div>
+            
+            <h2>How does this demo work?</h2>
+            <p>
+              A <em>self caching offline website</em>? Great working title! 
+            </p>
+            <p>
+              This javascript driven website will cache all pages you visit, including all linked javascript and stylesheet
+              assets. The cached content will be saved in
+              <a href="http://dev.w3.org/html5/webstorage/#the-localstorage-attribute">HTML5's localStorage</a>.
+            </p>
+            <p>
+              With a minimal usage of <a href="http://www.w3.org/TR/html5/offline.html#appcache">HTML5's Application Cache</a>
+              all pages you visited online will be available offline too. Restored from localStorage.
+            </p>
+            
+            <h2>Try it</h2>
+            <ul>
+              <li><a href="style.html">Browse</a> <a href="javascript.html">around</a>.</li>
+              <li>See the <em>Cached files</em> list (to the right) grow.</li>
+              <li>Unplug the internet. Yeah, really! Or use Firefox in offline mode.</li>
+              <li>Reload the page, with the very same URL you used for online browsing.</li>
+              <li>See no difference? Good. Because you look at a cached and restored offline copy of the file.</li>
+              <li>If you run into a non-cached page you will see the content of the fallback file <em>offline.html</em>.</li>
+            </ul>
+            
+            <h2>Browser support</h2>
+            <p>
+              This has been tested successfully in the latest versions of Chrome, Safari and Firefox. It also works
+              with the browser that comes with Android 2.2.
+            </p>
+          </div>
+          <div class="span4">
+            <h3>Cached files</h3>
+            <p><a class="btn" href="/new_cache" id="new-cache">Trigger New Cache</a></p>
+
+            <ol id="cached-files"></ol>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <p>
+          &copy; <a href="http://usejquery.com">Use jQuery</a> 2012
+          - by <a href="http://twitter.com/mustardamus">@mustardamus</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
