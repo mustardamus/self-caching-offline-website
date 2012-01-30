@@ -61,9 +61,10 @@ class SCOW
       @setStorage 'assets', @assets         #store the new assets index array
       @updateAssetsIndex()                  #update the demo list of the assets index
   
-  loadAsset: (path) ->                      #load a asset with $.get    
+  loadAsset: (path, callback = ->) ->       #load a asset with $.get, allow a additional callback
     $.get path, (content) =>                #get the file content
       @loadAssetCallback path, content      #content loaded, invoke the callback
+      callback path, content                #invoke the additional callback
   
   loadAssets: (paths) ->                    #cache either css or scripts
     for path in paths                       #go through all paths
@@ -77,6 +78,29 @@ class SCOW
       retArr.push $(el).attr(src)           #read the attribute containing the source path and store it in array
       
     retArr                                  #return a array of the file paths
+  
+  encodeImageBase64: (img) ->               #use canvas to get a base64 encoded string of the image
+    canvas        = document.createElement('canvas') #create a temporary canvas element
+    canvas.width  = img.width               #set width and..
+    canvas.height = img.height              #..height of the canvas to fit the complete image
+    context       = canvas.getContext('2d') #get the context for the canvas element
+    
+    context.drawImage img, 0, 0             #draw the image into the context
+    canvas.toDataURL 'image/jpg'            #and return the base64 encoded data url of the complete canvas
+  
+  loadImageCallback: (imgEl) ->
+    encoded = @encodeImageBase64(imgEl.get(0))    #encode the image to a base64 data URI
+    @loadAssetCallback imgEl.attr('src'), encoded #store encoded image in local storage
+  
+  loadImages: ->                            #get all images from the content and cache them encoded in base64
+    self   = @                              #keep a reference to 'this'
+    images = $ 'img', @bodyEl               #get all image elements, use <body> as context
+    
+    images.each ->                          #process every image
+      $(new Image())                        #create a dummy image object
+        .attr('src', $(@).attr('src'))      #load from the same path as found in the image element
+        .load ->                            #add a load event for the dummy image
+          self.loadImageCallback $(@)       #trigger the callback and pass the jquery object for the image
     
   cacheCurrentFile: ->                      #cache the requested .html file
     cssAssets = @getAssets('link[rel="stylesheet"]', 'href') #get array of stylesheets
@@ -90,6 +114,7 @@ class SCOW
     @loadAssetCallback(@curFileName, cacheObj) #manually invoke the callback and save the object
     @loadAssets cssAssets                   #begin to load all the css assets
     @loadAssets jsAssets                    #same with the javascripts
+    @loadImages()                           #begin to load, encode and cache images
 
   restoreHeader: (paths, wrapper) ->        #reassemble and include the cached files
     combined  = ''                          #include all in one string
@@ -103,6 +128,17 @@ class SCOW
     $(wrapper)                              #create a jquery object from the wrapper markup
       .text(combined)                       #set the content
       .appendTo @headEl                     #and append it to the head
+    
+  restoreImages: ->                         #restore all images from cache if possible
+    self   = @                              #keep a reference to 'this'
+    images = $ 'img', @bodyEl               #get all image elements, use <body> as context
+    
+    images.each ->                          #process every image
+      imgEl   = $(@)                        #get jquery object for the image element
+      content = self.getStorage(imgEl.attr('src')) #get the cached content for the image path
+      
+      if content isnt null                  #make sure the image is cached
+        imgEl.attr 'src', content           #restore image via the cached base64 data URI
   
   restoreFromCache: ->                      #restore requested file and assets from cache
     cached = @getStorage(@curFileName)      #get the cached object with body, title and assets refs
@@ -116,5 +152,7 @@ class SCOW
       
       #restore all javascripts
       @restoreHeader cached.javascripts, '<script type="text/javascript"/>'
+      
+      @restoreImages()                      #restore all images
 
 jQuery -> (new SCOW)                        #initially create the class when the DOM is ready

@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Self caching offline website - Additional CSS Example</title>
+    <title>Self caching offline website - Images Example</title>
     
     <link href='css/bootstrap.min.css' rel='stylesheet' type='text/css' />
     <link href='css/demo.css' rel='stylesheet' type='text/css' />
-    <link href='css/additional.css' rel='stylesheet' type='text/css' />
     
     <script src='js/jquery.js'></script>
     <script src='js/scow.js'></script>
@@ -16,9 +15,9 @@
         <div class="container">
           <ul class="nav">
             <li><a href="index.html">Home</a></li>
-            <li class="active"><a href="style.html">Additional CSS Example</a></li>
+            <li><a href="style.html">Additional CSS Example</a></li>
             <li><a href="javascript.html">Additional JS Example</a></li>
-            <li><a href="images.html">Images Example</a></li>
+            <li class="active"><a href="images.html">Images Example</a></li>
           </ul>
         </div>
       </div>
@@ -29,7 +28,7 @@
         <div class="page-header">
           <h1>
             Self caching offline website
-            <small>Additional CSS Example</small>
+            <small>Images</small>
           </h1>
         </div>
         <div class="row">
@@ -42,13 +41,25 @@
             </div>
             
             <p>
-              This page includes a addtitional stylesheet <code>additional.css</code>.
+              All images are encoded to Base64 <a href="http://en.wikipedia.org/wiki/Data_URI_scheme">data URI</a>'s
+              with <a href="http://www.w3.org/TR/html5/the-canvas-element.html#dom-canvas-todataurl">HTML5's Canvas</a>
+              <code>toDataUrl()</code> feature.
             </p>
             
-            <h4>CSS</h4>
-            <pre>body, html { background: #111; }
-footer { border-top: none; color: #aaa; }
-footer a { color: white; }</pre>
+            <h3><a href="http://www.occupyfrankfurt.de/">Occupy Frankfurt</a></h3>
+            
+            <ul class="media-grid">
+              <li>
+                <a href="http://www.flickr.com/photos/scratchbeck/6246659696/in/photostream/">
+                  <img class="thumbnail" src="images/occupy_ffm1.jpg" width="500" height="333" alt="">
+                </a>
+              </li>
+              <li>
+                <a href="http://www.flickr.com/photos/scratchbeck/6246138859/in/photostream/">
+                  <img class="thumbnail" src="images/occupy_ffm2.jpg" width="500" height="333" alt="">
+                </a>
+              </li>
+            </ul>
           </div>
           <div class="span4">
             <h3>Cached files</h3>

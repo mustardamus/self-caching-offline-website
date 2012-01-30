@@ -2,7 +2,7 @@ require 'sinatra'
 
 configure do
   mime_type :appcache , 'text/cache-manifest'           #content_type for the cache manifest
-  set       :port     , 10033                           #to fully reset the last cache change port
+  set       :port     , 10042                           #to fully reset the last cache change port
   set       :timestamp, nil                             #hold the current cache time
 end
 

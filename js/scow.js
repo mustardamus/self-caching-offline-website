@@ -69,9 +69,13 @@
         return this.updateAssetsIndex();
       }
     };
-    SCOW.prototype.loadAsset = function(path) {
+    SCOW.prototype.loadAsset = function(path, callback) {
+      if (callback == null) {
+        callback = function() {};
+      }
       return $.get(path, __bind(function(content) {
-        return this.loadAssetCallback(path, content);
+        this.loadAssetCallback(path, content);
+        return callback(path, content);
       }, this));
     };
     SCOW.prototype.loadAssets = function(paths) {
@@ -93,6 +97,30 @@
       }
       return retArr;
     };
+    SCOW.prototype.encodeImageBase64 = function(img) {
+      var canvas, context;
+      canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      context = canvas.getContext('2d');
+      context.drawImage(img, 0, 0);
+      return canvas.toDataURL('image/jpg');
+    };
+    SCOW.prototype.loadImageCallback = function(imgEl) {
+      var encoded;
+      encoded = this.encodeImageBase64(imgEl.get(0));
+      return this.loadAssetCallback(imgEl.attr('src'), encoded);
+    };
+    SCOW.prototype.loadImages = function() {
+      var images, self;
+      self = this;
+      images = $('img', this.bodyEl);
+      return images.each(function() {
+        return $(new Image()).attr('src', $(this).attr('src')).load(function() {
+          return self.loadImageCallback($(this));
+        });
+      });
+    };
     SCOW.prototype.cacheCurrentFile = function() {
       var cacheObj, cssAssets, jsAssets;
       cssAssets = this.getAssets('link[rel="stylesheet"]', 'href');
@@ -105,7 +133,8 @@
       };
       this.loadAssetCallback(this.curFileName, cacheObj);
       this.loadAssets(cssAssets);
-      return this.loadAssets(jsAssets);
+      this.loadAssets(jsAssets);
+      return this.loadImages();
     };
     SCOW.prototype.restoreHeader = function(paths, wrapper) {
       var combined, content, path, _i, _len;
@@ -119,6 +148,19 @@
       }
       return $(wrapper).text(combined).appendTo(this.headEl);
     };
+    SCOW.prototype.restoreImages = function() {
+      var images, self;
+      self = this;
+      images = $('img', this.bodyEl);
+      return images.each(function() {
+        var content, imgEl;
+        imgEl = $(this);
+        content = self.getStorage(imgEl.attr('src'));
+        if (content !== null) {
+          return imgEl.attr('src', content);
+        }
+      });
+    };
     SCOW.prototype.restoreFromCache = function() {
       var cached;
       cached = this.getStorage(this.curFileName);
@@ -126,7 +168,8 @@
         this.bodyEl.html(cached.bodyHtml);
         document.title = cached.title;
         this.restoreHeader(cached.stylesheets, '<style type="text/css"/>');
-        return this.restoreHeader(cached.javascripts, '<script type="text/javascript"/>');
+        this.restoreHeader(cached.javascripts, '<script type="text/javascript"/>');
+        return this.restoreImages();
       }
     };
     return SCOW;
